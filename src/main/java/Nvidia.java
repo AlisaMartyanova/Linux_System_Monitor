@@ -1,6 +1,13 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import java.util.ArrayList;
+
 
 public class Nvidia {
     String smiPrefix;
@@ -16,17 +23,33 @@ public class Nvidia {
         tmpFileName = "nvidia.tmp";
     }
 
-    public void fetchUpdates() {
+    public ArrayList<Gpu> fetchUpdates() {
         String command = "nvidia-smi -q -x";
+
+        ArrayList<Gpu> gpus = new ArrayList();
         try {
             Process process = Runtime.getRuntime().exec(smiPrefix + command);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+            dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(process.getInputStream());
+
+            doc.getDocumentElement().normalize();
+
+            NodeList gList = doc.getElementsByTagName("gpu");
+
+            for (int i = 0; i < gList.getLength(); i++) {
+                Gpu g = new Gpu();
+                g.parse((Element) gList.item(i));
+                gpus.add(g);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Fetching Nvidia updates goes wrong.");
         }
+
+        return gpus;
     }
 }

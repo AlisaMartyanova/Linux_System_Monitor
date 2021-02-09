@@ -1,1 +1,5 @@
+ProcessInfo.class
+Gpu.class
+Memory.class
 Nvidia.class
+Utilization.class
