@@ -1,5 +1,6 @@
 public class HelloWorld {
     public static void main(String[] args){
-        System.out.println("Hello world!");
+        Intel_GPU_monitor a = new Intel_GPU_monitor(5000);
+        a.start();
     }
 }

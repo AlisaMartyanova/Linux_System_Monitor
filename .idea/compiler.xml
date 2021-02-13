@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="LinuxSystemMonitor" />
+        <module name="Linux_System_Monitor" />
       </profile>
     </annotationProcessing>
   </component>
