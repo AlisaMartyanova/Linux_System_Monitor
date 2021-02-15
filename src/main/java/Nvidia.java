@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class Nvidia {
     String smiPrefix;
-    String tmpFileName;
 
     public Nvidia(String prefix) {
         if (prefix != "") {
@@ -19,8 +18,6 @@ public class Nvidia {
         } else {
             smiPrefix = prefix;
         }
-
-        tmpFileName = "nvidia.tmp";
     }
 
     public ArrayList<Gpu> fetchUpdates() {
@@ -36,18 +33,25 @@ public class Nvidia {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(process.getInputStream());
 
-            doc.getDocumentElement().normalize();
-
-            NodeList gList = doc.getElementsByTagName("gpu");
-
-            for (int i = 0; i < gList.getLength(); i++) {
-                Gpu g = new Gpu();
-                g.parse((Element) gList.item(i));
-                gpus.add(g);
-            }
+            gpus = parseUpdates(doc);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Fetching Nvidia updates goes wrong.");
+        }
+
+        return gpus;
+    }
+
+    public static ArrayList<Gpu> parseUpdates(Document doc) {
+        doc.getDocumentElement().normalize();
+
+        ArrayList<Gpu> gpus = new ArrayList();
+        NodeList gList = doc.getElementsByTagName("gpu");
+
+        for (int i = 0; i < gList.getLength(); i++) {
+            Gpu g = new Gpu();
+            g.parse((Element) gList.item(i));
+            gpus.add(g);
         }
 
         return gpus;

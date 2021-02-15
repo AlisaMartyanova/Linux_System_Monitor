@@ -28,6 +28,10 @@ public class Gpu {
         return memory;
     }
 
+    public ArrayList<ProcessInfo> getProcesses() {
+        return processes;
+    }
+
     public void parse(Element gNode) {
         name = gNode.getElementsByTagName("product_name").item(0).getTextContent();
         utilization.parse((Element) gNode.getElementsByTagName("utilization").item(0));
