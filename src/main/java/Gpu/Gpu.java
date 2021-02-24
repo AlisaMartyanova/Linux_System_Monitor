@@ -10,10 +10,17 @@ public class Gpu {
     Memory memory;
     ArrayList<ProcessInfo> processes;
 
-    public Gpu() {
-        utilization = new Utilization();
-        memory = new Memory();
+    public Gpu(){
+        utilization = new NvidiaUtilization();
+        memory = new NvidiaMemory();
         processes = new ArrayList();
+    }
+
+    public Gpu(String name, Utilization utilization, Memory memory, ArrayList<ProcessInfo> processes) {
+        this.name = name;
+        this.utilization = utilization;
+        this.memory = memory;
+        this.processes = processes;
     }
 
     public String getName() {
@@ -30,19 +37,6 @@ public class Gpu {
 
     public ArrayList<ProcessInfo> getProcesses() {
         return processes;
-    }
-
-    public void parse(Element gNode) {
-        name = gNode.getElementsByTagName("product_name").item(0).getTextContent();
-        utilization.parse((Element) gNode.getElementsByTagName("utilization").item(0));
-        memory.parse((Element) gNode.getElementsByTagName("fb_memory_usage").item(0));
-
-        NodeList pList = gNode.getElementsByTagName("process_info");
-        for (int i = 0; i < pList.getLength(); i++) {
-            ProcessInfo p = new ProcessInfo();
-            p.parse((Element) pList.item(i));
-            processes.add(p);
-        }
     }
 
     public void pprint() {

@@ -9,5 +9,8 @@ public class Main {
         Nvidia nv = new Nvidia("optirun");
         ArrayList<Gpu> nvidiaGpus = nv.fetchUpdates();
         nvidiaGpus.forEach(p -> p.pprint());
+
+        Intel_GPU_monitor intel = new Intel_GPU_monitor(5000);
+        intel.start();
     }
 }

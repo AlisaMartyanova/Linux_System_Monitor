@@ -9,7 +9,7 @@ import org.xml.sax.InputSource;
 import java.util.ArrayList;
 
 
-public class Nvidia {
+public class Nvidia implements GpuType {
     String smiPrefix;
 
     public Nvidia(String prefix) {
@@ -31,13 +31,12 @@ public class Nvidia {
             dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
             dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(process.getInputStream());
 
-            gpus = parseUpdates(doc);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Fetching Nvidia updates goes wrong.");
-        }
+            if(process.getInputStream().available() > 0) {
+                Document doc = dBuilder.parse(process.getInputStream());
+                gpus = parseUpdates(doc);
+            }
+        } catch (Exception e) {}
 
         return gpus;
     }
@@ -49,7 +48,7 @@ public class Nvidia {
         NodeList gList = doc.getElementsByTagName("gpu");
 
         for (int i = 0; i < gList.getLength(); i++) {
-            Gpu g = new Gpu();
+            NvidiaGpu g = new NvidiaGpu();
             g.parse((Element) gList.item(i));
             gpus.add(g);
         }

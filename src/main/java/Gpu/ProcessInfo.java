@@ -10,6 +10,12 @@ public class ProcessInfo {
 
     public ProcessInfo() {}
 
+    public ProcessInfo(String pid, String name, String usedMemory) {
+        this.pid = pid;
+        this.name = name;
+        this.usedMemory = usedMemory;
+    }
+
     public String getPid() {
         return pid;
     }
@@ -20,12 +26,6 @@ public class ProcessInfo {
 
     public String getUsedMemory() {
         return usedMemory;
-    }
-
-    public void parse(Element piNode) {
-        pid = piNode.getElementsByTagName("pid").item(0).getTextContent();
-        name = piNode.getElementsByTagName("process_name").item(0).getTextContent();
-        usedMemory = piNode.getElementsByTagName("used_memory").item(0).getTextContent();
     }
 
     public void pprint() {

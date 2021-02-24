@@ -8,6 +8,8 @@ public class Memory {
     String used;
     String free;
 
+    public Memory() {}
+
     public Memory(String total, String used, String free) {
         this.total = total;
         this.used = used;

@@ -10,7 +10,7 @@ import org.xml.sax.InputSource;
 import java.util.ArrayList;
 
 
-public class AMD {
+public class AMD implements GpuType {
     String radeontopPrefix;
 
     public AMD(String prefix) {
@@ -29,7 +29,9 @@ public class AMD {
             Process process = Runtime.getRuntime().exec(radeontopPrefix + command);
 
             Scanner scanner = new Scanner(process.getInputStream());
-            String commandOutput = scanner.useDelimiter("\\A").next();
+
+            scanner.useDelimiter("\\A");
+            String commandOutput = scanner.next();
 
             String[] usageInfoEntries = commandOutput.split("\n")[1].split(":")[1].split(",");
 
@@ -49,11 +51,7 @@ public class AMD {
             Gpu gpu = new Gpu(name, utilization, memory, new ArrayList<ProcessInfo>());
 
             gpus.add(gpu);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Fetching AMD updates goes wrong.");
-        }
+        } catch (Exception e) {}
 
         return gpus;
     }

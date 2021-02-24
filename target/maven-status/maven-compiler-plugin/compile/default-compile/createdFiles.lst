@@ -1,5 +1,12 @@
-ProcessInfo.class
-Gpu.class
-Memory.class
+Intel.class
 Nvidia.class
+AMD.class
 Utilization.class
+Gpu.class
+NvidiaGpu.class
+ProcessInfo.class
+GpuType.class
+NvidiaProcessInfo.class
+NvidiaUtilization.class
+NvidiaMemory.class
+Memory.class

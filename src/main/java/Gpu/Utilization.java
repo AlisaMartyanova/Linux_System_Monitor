@@ -9,17 +9,17 @@ public class Utilization {
 
     public Utilization() {}
 
+    public Utilization(String gpuUtil, String memoryUtil) {
+        this.gpuUtil = gpuUtil;
+        this.memoryUtil = memoryUtil;
+    }
+
     public String getGpuUtil() {
         return gpuUtil;
     }
 
     public String getMemoryUtil() {
         return memoryUtil;
-    }
-
-    public void parse(Element uNode) {
-        gpuUtil = uNode.getElementsByTagName("gpu_util").item(0).getTextContent();
-        memoryUtil = uNode.getElementsByTagName("memory_util").item(0).getTextContent();
     }
 
     public void pprint() {
