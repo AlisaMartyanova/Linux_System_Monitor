@@ -1,16 +1,8 @@
-import java.util.ArrayList;
+import java.util.concurrent.*;
 
 public class Main {
     public static void main(String[] args){
-        AMD amd = new AMD("sudo");
-        ArrayList<Gpu> amdGpus = amd.fetchUpdates();
-        amdGpus.forEach(p -> p.pprint());
-
-        Nvidia nv = new Nvidia("optirun");
-        ArrayList<Gpu> nvidiaGpus = nv.fetchUpdates();
-        nvidiaGpus.forEach(p -> p.pprint());
-
-        Intel_GPU_monitor intel = new Intel_GPU_monitor(5000);
-        intel.start();
+        BlockingQueue<Gpu> queue = new LinkedBlockingQueue<Gpu>(15);
+        Runner.run(queue, 5000, 2000);
     }
 }

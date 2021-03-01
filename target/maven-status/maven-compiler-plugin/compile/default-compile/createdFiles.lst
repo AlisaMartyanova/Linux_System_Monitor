@@ -1,3 +1,4 @@
+Consumer.class
 Intel.class
 Nvidia.class
 AMD.class
@@ -10,3 +11,4 @@ NvidiaProcessInfo.class
 NvidiaUtilization.class
 NvidiaMemory.class
 Memory.class
+Runner.class

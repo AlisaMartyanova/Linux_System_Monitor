@@ -8,16 +8,38 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 
 
-public class AMD implements GpuType {
+public class AMD implements GpuType, Runnable {
     String radeontopPrefix;
+    private final BlockingQueue<Gpu> queue;
+    int tick;
 
-    public AMD(String prefix) {
+    public AMD(String prefix, int tick, BlockingQueue<Gpu> queue) {
         if (prefix != "") {
             radeontopPrefix = prefix + " ";
         } else {
             radeontopPrefix = prefix;
+        }
+
+        this.tick = tick;
+        this.queue = queue;
+    }
+
+    public void run() {
+        while(true){
+            ArrayList<Gpu> gpus = fetchUpdates();
+            try {
+                gpus.forEach(g -> {
+                        try {
+                            queue.put(g);
+                        } catch (Exception e) {
+                            System.out.println("Error occured while pushing updates");
+                        }
+                    });
+                Thread.sleep(tick);
+            } catch (Exception e) {}
         }
     }
 

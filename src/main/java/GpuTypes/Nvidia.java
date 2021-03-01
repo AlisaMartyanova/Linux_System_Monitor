@@ -7,16 +7,38 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import java.util.ArrayList;
+import java.util.concurrent.*;
 
 
-public class Nvidia implements GpuType {
+public class Nvidia implements GpuType, Runnable {
     String smiPrefix;
+    private final BlockingQueue<Gpu> queue;
+    int tick;
 
-    public Nvidia(String prefix) {
+    public Nvidia(String prefix, int tick, BlockingQueue<Gpu> queue) {
         if (prefix != "") {
-            smiPrefix = prefix + " ";
+            this.smiPrefix = prefix + " ";
         } else {
-            smiPrefix = prefix;
+            this.smiPrefix = prefix;
+        }
+
+        this.tick = tick;
+        this.queue = queue;
+    }
+
+    public void run() {
+        while(true){
+            ArrayList<Gpu> gpus = fetchUpdates();
+            try {
+                gpus.forEach(g -> {
+                        try {
+                            queue.put(g);
+                        } catch (Exception e) {
+                            System.out.println("Error occured while pushing updates");
+                        }
+                    });
+                Thread.sleep(tick);
+            } catch (Exception e) {}
         }
     }
 
@@ -32,10 +54,10 @@ public class Nvidia implements GpuType {
             dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-            if(process.getInputStream().available() > 0) {
-                Document doc = dBuilder.parse(process.getInputStream());
-                gpus = parseUpdates(doc);
-            }
+            // if(process.getInputStream().available() > 0) {
+            Document doc = dBuilder.parse(process.getInputStream());
+            gpus = parseUpdates(doc);
+            // }
         } catch (Exception e) {}
 
         return gpus;
