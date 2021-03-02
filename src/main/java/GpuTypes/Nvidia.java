@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import java.util.ArrayList;
 import java.util.concurrent.*;
+import org.xml.sax.*;
 
 
 public class Nvidia implements GpuType, Runnable {
@@ -52,12 +53,28 @@ public class Nvidia implements GpuType, Runnable {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
             dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-            // if(process.getInputStream().available() > 0) {
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            dBuilder.setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public void warning(SAXParseException exception) throws SAXException {
+                        throw new SAXException();
+                    }
+
+                    @Override
+                    public void fatalError(SAXParseException exception) throws SAXException {
+                        throw new SAXException();
+                    }
+
+                    @Override
+                    public void error(SAXParseException exception) throws SAXException {
+                        throw new SAXException();
+                    }
+                });
+
             Document doc = dBuilder.parse(process.getInputStream());
             gpus = parseUpdates(doc);
-            // }
+
         } catch (Exception e) {}
 
         return gpus;
