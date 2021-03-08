@@ -1,6 +1,6 @@
 # Linux System Monitor
 
-![Java CI with Maven (Tests)](https://github.com/AlisaMartyanova/Linux_System_Monitor/workflows/maven.yml/badge.svg)
+![Java CI with Maven (Tests)](https://github.com/AlisaMartyanova/Linux_System_Monitor/actions/workflows/maven.yml/badge.svg)
 
 This repository contains library for getting statistics of gpu usage for Linux operating system. For now it supports nvidia, amd and intel graphics cards.
 
